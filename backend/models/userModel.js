@@ -6,9 +6,11 @@ const userSchema = new mongoose.Schema({
   photo: { type: String, required: true },
   firstName: { type: String },
   lastName: { type: String },
-  crediBalance: { type: Number, default: 5 },
+  creditBalance: { type: Number, default: 5 },
 });
 
-const userModel = mongoose.models.user || mongoose.model("user", userSchema);
+ 
+if (mongoose.models.userInfo) delete mongoose.models.userInfo;
 
+const userModel = mongoose.model("userInfo", userSchema);
 export default userModel;

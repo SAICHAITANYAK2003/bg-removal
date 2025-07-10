@@ -4,6 +4,8 @@ import userModel from "../models/userModel.js";
 //API Controller Function to manage Clerk user with database
 //http://localhost:4000/api/user/webhooks
 
+console.log("🧠 Using Model:", userModel.modelName);
+
 export const clerkWebHooks = async (request, response) => {
   try {
     const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
@@ -25,8 +27,10 @@ export const clerkWebHooks = async (request, response) => {
           firstName: data.first_name,
           lastName: data.last_name,
         };
+        console.log("🧠 Using Model:", userModel.modelName);
+
         await userModel.create(userData);
-        response.json();
+        response.json({});
         break;
       }
 
@@ -38,7 +42,8 @@ export const clerkWebHooks = async (request, response) => {
             firstName: data.first_name,
             lastName: data.last_name,
           };
-          await userModel.findByIdAndUpdate({ clerkId: data.id }, userData);
+          await userModel.findOneAndUpdate({ clerkId: data.id }, userData);
+
           response.json({});
         }
         break;
@@ -50,6 +55,20 @@ export const clerkWebHooks = async (request, response) => {
       default:
         break;
     }
+  } catch (error) {
+    console.log(error.message);
+    response.json({ success: false, message: error.message });
+  }
+};
+
+//API Controller Function to get user available credits data
+
+export const userCredits = async (request, response) => {
+  try {
+    const { clerkId } = request.body;
+
+    const userData = await userModel.findOne({ clerkId });
+    response.json({ success: true, credits: userData.creditBalance });
   } catch (error) {
     console.log(error.message);
     response.json({ success: false, message: error.message });

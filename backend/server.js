@@ -8,6 +8,7 @@ dotenv.config();
 //Config
 const app = express();
 await mongooseDB();
+console.log("🌐 ENV DB URI:", process.env.MONGO_URI);
 
 //Middleware
 app.use(express.json());
