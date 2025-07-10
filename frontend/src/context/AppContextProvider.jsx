@@ -16,9 +16,7 @@ export const AppContextProvider = ({ children }) => {
       const token = await getToken();
 
       const { data } = await axios.get(backendUrl + "/api/user/credits", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { token },
       });
 
       if (data.success) {

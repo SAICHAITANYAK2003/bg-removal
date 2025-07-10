@@ -24,6 +24,7 @@ const Navbar = () => {
         {isSignedIn ? (
           <div>
             <UserButton />
+            <p>{credits}</p>
           </div>
         ) : (
           <button

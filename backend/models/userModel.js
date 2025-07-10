@@ -9,8 +9,7 @@ const userSchema = new mongoose.Schema({
   creditBalance: { type: Number, default: 5 },
 });
 
- 
-if (mongoose.models.userInfo) delete mongoose.models.userInfo;
+
 
 const userModel = mongoose.model("userInfo", userSchema);
 export default userModel;
