@@ -68,6 +68,9 @@ export const userCredits = async (request, response) => {
     const { clerkId } = request.body;
 
     const userData = await userModel.findOne({ clerkId });
+    if (!userData) {
+      return response.json({ success: false, message: "User not found" });
+    }
     response.json({ success: true, credits: userData.creditBalance });
   } catch (error) {
     console.log(error.message);

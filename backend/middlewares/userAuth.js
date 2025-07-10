@@ -12,8 +12,7 @@ export const userAuth = async (request, response, next) => {
     }
 
     const tokenDecode = jwt.decode(token);
-
-    request.body.clerkId = tokenDecode.clerkId;
+    request.clerkId = tokenDecode.clerkId;
 
     next();
   } catch (error) {
