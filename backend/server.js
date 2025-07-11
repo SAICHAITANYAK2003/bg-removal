@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import bodyParser from "body-parser";
 import mongooseDB from "./config/mongodb.js";
 import userRouter from "./routes/userRoutes.js";
 import imageRouter from "./routes/imageRoutes.js";
@@ -11,11 +12,16 @@ const app = express();
 await mongooseDB();
 console.log("🌐 ENV DB URI:", process.env.MONGO_URI);
 
+app.use("/api/user/webhooks", bodyParser.raw({ type: "application/json" }));
+
+
 //Middleware
 app.use(express.json());
 app.use(cors());
 
 const port = process.env.PORT || 4000;
+
+
 
 //Routes
 app.get("/", (request, response) => {

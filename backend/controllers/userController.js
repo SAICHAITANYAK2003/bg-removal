@@ -7,8 +7,6 @@ import userModel from "../models/userModel.js";
 console.log("🧠 Using Model:", userModel.modelName);
 
 export const clerkWebHooks = async (request, response) => {
-  console.log("📩 Webhook received:", request.body);
-
   try {
     const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
 
