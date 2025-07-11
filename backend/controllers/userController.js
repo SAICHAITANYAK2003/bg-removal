@@ -1,10 +1,12 @@
 import { Webhook } from "svix";
 import userModel from "../models/userModel.js";
+import razorpay from "razorpay";
+import transactionModel from "../models/transactionModel.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 //API Controller Function to manage Clerk user with database
 //http://localhost:4000/api/user/webhooks
-
-console.log("🧠 Using Model:", userModel.modelName);
 
 export const clerkWebHooks = async (request, response) => {
   try {
@@ -64,11 +66,10 @@ export const clerkWebHooks = async (request, response) => {
 
 export const userCredits = async (request, response) => {
   try {
-    console.log("request.clerkId:", request.clerkId);
     const clerkId = request.clerkId;
 
     const userData = await userModel.findOne({ clerkId });
-    console.log("📦 Fetched user:", userData);
+
     if (!userData) {
       return response.json({ success: false, message: "User not found" });
     }
@@ -76,5 +77,123 @@ export const userCredits = async (request, response) => {
   } catch (error) {
     console.log(error.message);
     response.json({ success: false, message: error.message });
+  }
+};
+
+//Gateway Initialize
+
+const razorpayInstance = new razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
+
+//API TO MAKE PAYMENT FOR CREDITS
+
+export const paymentRazorpay = async (request, response) => {
+  try {
+    const clerkId = request.clerkId;
+    const { planId } = request.body;
+
+    const user = await userModel.findOne({ clerkId });
+
+    if (!user || !planId) {
+      return response.json({
+        success: false,
+        message: "Invalid User and Credentials",
+      });
+    }
+
+    let credits, plan, amount, date;
+
+    switch (planId) {
+      case "Basic":
+        plan = "Basic";
+        credits = 100;
+        amount = 10;
+        break;
+      case "Advanced":
+        plan = "Advanced";
+        credits = 500;
+        amount = 50;
+        break;
+      case "Business":
+        plan = "Business";
+        credits = 5000;
+        amount = 250;
+        break;
+
+      default:
+        break;
+    }
+
+    date = Date.now();
+
+    //Create Transaction :
+
+    const transactionData = {
+      clerkId,
+      plan,
+      amount,
+      credits,
+      date,
+    };
+
+    const newTransaction = await transactionModel.create(transactionData);
+
+    const options = {
+      amount: amount * 100,
+      currency: process.env.CURRENCY,
+      receipt: newTransaction._id,
+    };
+
+    await razorpayInstance.orders.create(options, (error, order) => {
+      if (error) {
+        return response.json({ success: false, message: error });
+      }
+      return response.json({ success: true, order });
+    });
+  } catch (error) {
+    console.log(error.message);
+    return response.json({ success: false, message: error.message });
+  }
+};
+
+//To verify RazorPay
+export const verifyRazorpay = async (request, response) => {
+  try {
+    const { razorpay_order_id } = request.body;
+
+    const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id);
+
+    if (orderInfo.status === "paid") {
+      const transactionData = await transactionModel.findById(
+        orderInfo.receipt
+      );
+
+      if (transactionData.payment) {
+        return response.json({
+          success: false,
+          message: "Payment already processed",
+        });
+      }
+
+      //Adding Credits to user data:
+      const userData = await userModel.findOne({
+        clerkId: transactionData.clerkId,
+      });
+      const creditBalance = userData.creditBalance + transactionData.credits;
+
+      await userModel.findByIdAndUpdate(userData._id, { creditBalance });
+
+      //making payment true
+      await transactionModel.findByIdAndUpdate(transactionData._id, {
+        payment: true,
+      });
+
+      response.json({ success: true, message: "Credits Added" });
+    }
+  } catch (error) {
+    console.log(error.message);
+    return response.json({ success: false, message: error.message });
   }
 };

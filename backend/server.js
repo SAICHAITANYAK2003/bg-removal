@@ -14,21 +14,18 @@ console.log("🌐 ENV DB URI:", process.env.MONGO_URI);
 
 app.use("/api/user/webhooks", bodyParser.raw({ type: "application/json" }));
 
-
 //Middleware
 app.use(express.json());
 app.use(cors());
 
 const port = process.env.PORT || 4000;
 
-
-
 //Routes
 app.get("/", (request, response) => {
   response.send("Welcome to BG Removal server");
 });
 app.use("/api/user", userRouter);
-app.use("/api/image/", imageRouter);
+app.use("/api/image", imageRouter);
 
 app.listen(port, () => {
   console.log(`🚀 Server is running at port :${port}`);

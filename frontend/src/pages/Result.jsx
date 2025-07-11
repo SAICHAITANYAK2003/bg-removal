@@ -1,9 +1,11 @@
 import React from "react";
 import { useContext } from "react";
 import { AppContext } from "../context/AppContext";
+import { useNavigate } from "react-router-dom";
 
 const Result = () => {
   const { resultImage, image } = useContext(AppContext);
+  const navigate = useNavigate();
 
   const handleDownload = async () => {
     try {
@@ -51,7 +53,10 @@ const Result = () => {
 
           {resultImage && (
             <div className="flex gap-4 w-full sm:justify-end max-md:flex-col px-10 pb-10">
-              <button className="border-2 border-violet-600 px-5 py-2 rounded-full cursor-pointer text-violet-600 hover:scale-105 transition-all duration-500">
+              <button
+                onClick={() => navigate("/")}
+                className="border-2 border-violet-600 px-5 py-2 rounded-full cursor-pointer text-violet-600 hover:scale-105 transition-all duration-500"
+              >
                 Try another image
               </button>
               <button

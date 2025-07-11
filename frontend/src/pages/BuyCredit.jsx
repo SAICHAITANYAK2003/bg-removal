@@ -1,6 +1,75 @@
+import { useContext } from "react";
 import { assets, plans } from "../assets/assets";
+import { AppContext } from "../context/AppContext";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@clerk/clerk-react";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 const BuyCredit = () => {
+  const { backendUrl, loadCredits } = useContext(AppContext);
+  const navigate = useNavigate();
+
+  const { getToken } = useAuth();
+
+  const initPay = async (order) => {
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      amount: order.amount,
+      currency: order.currency,
+      name: "Credits Payment",
+      description: "Credits Payment",
+      order_id: order.id,
+      receipt: order.receipt,
+      handler: async (response) => {
+        console.log(response);
+
+        const token = getToken();
+
+        try {
+          const { data } =await axios.post(
+            backendUrl + "/api/user/verify-payment",
+            response,
+            { headers: { token } }
+          );
+
+          if (data.success) {
+            loadCredits();
+            navigate("/");
+            toast.success("Credits Added");
+          }
+        } catch (error) {
+          console.log(error.message);
+
+          toast.error(error.message);
+        }
+      },
+    };
+
+    const razorpayWindow = new window.Razorpay(options);
+    razorpayWindow.open();
+  };
+
+  const paymentRazorpay = async (planId) => {
+    try {
+      const token = await getToken();
+
+      const { data } = await axios.post(
+        backendUrl + "/api/user/razor-pay",
+        { planId },
+        { headers: { token } }
+      );
+
+      if (data.success) {
+        initPay(data.order);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error.message);
+      toast.error(error.message);
+    }
+  };
   return (
     <>
       <div className="min-h-[75vh] text-center pt-4 ">
@@ -35,7 +104,10 @@ const BuyCredit = () => {
                 </p>
               </div>
 
-              <button className="px-4 py-2 bg-black text-white rounded-md mt-5 cursor-pointer w-full">
+              <button
+                onClick={() => paymentRazorpay(plan.id)}
+                className="px-4 py-2 bg-black text-white rounded-md mt-5 cursor-pointer w-full"
+              >
                 Purchase
               </button>
             </div>
