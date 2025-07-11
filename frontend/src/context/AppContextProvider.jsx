@@ -20,6 +20,7 @@ export const AppContextProvider = ({ children }) => {
   const loadCredits = async () => {
     try {
       const token = await getToken();
+      console.log(token);
 
       const { data } = await axios.get(backendUrl + "/api/user/credits", {
         headers: { token },
