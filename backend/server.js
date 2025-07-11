@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import mongooseDB from "./config/mongodb.js";
 import userRouter from "./routes/userRoutes.js";
+import imageRouter from "./routes/imageRoutes.js";
 dotenv.config();
 
 //Config
@@ -21,6 +22,7 @@ app.get("/", (request, response) => {
   response.send("Welcome to BG Removal server");
 });
 app.use("/api/user", userRouter);
+app.use("/api/image/", imageRouter);
 
 app.listen(port, () => {
   console.log(`🚀 Server is running at port :${port}`);

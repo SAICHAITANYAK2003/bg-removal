@@ -8,7 +8,7 @@ import { AppContext } from "../context/AppContext";
 const Navbar = () => {
   const { openSignIn } = useClerk();
   const { isSignedIn, user } = useUser();
-  const { credits, setCredits, loadCredits } = useContext(AppContext);
+  const { credits, loadCredits } = useContext(AppContext);
 
   useEffect(() => {
     if (isSignedIn) {
@@ -22,9 +22,13 @@ const Navbar = () => {
           <img src={assets.logo_no_bg} alt="logo" className="w-40 h-25" />
         </Link>
         {isSignedIn ? (
-          <div>
+          <div className="flex items-center gap-2 md:gap-3">
+            <button className="flex items-center border-2 bg-violet-100 border-violet-700  px-2 py-1.5 sm:py-2 rounded-full ">
+              <img src={assets.credit_icon} alt="credit-icon" className="w-5" />
+              <p className="ml-1.5 max-sm:text-[12px]">Credits Left : {credits}</p>
+            </button>
+             
             <UserButton />
-            <p>{credits}</p>
           </div>
         ) : (
           <button

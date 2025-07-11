@@ -1,7 +1,10 @@
+import { useContext } from "react";
 import { assets } from "../assets/assets";
 import { MdOutlineFileUpload } from "react-icons/md";
+import { AppContext } from "../context/AppContext";
 
 const HeroSection = () => {
+  const { removeBg } = useContext(AppContext);
   return (
     <>
       <div className="flex max-sm:flex-col-reverse justify-between items-center pt-10 ">
@@ -24,7 +27,13 @@ const HeroSection = () => {
               htmlFor="fileUpload"
               className="bg-gradient-to-r from-[#7648FF] to-[#D34AF8] px-3 py-2 md:px-5 md:py-4 max-sm:text-[12px] text-white rounded-full cursor-pointer flex items-center mt-4 hover:scale-105 transition-all duration-700 "
             >
-              <input type="file" id="fileUpload" name="fileUpload" hidden />
+              <input
+                onChange={(e) => removeBg(e.target.files[0])}
+                type="file"
+                id="fileUpload"
+                accept="image/*"
+                hidden
+              />
               <MdOutlineFileUpload size={30} className="mr-1" />
               Upload your image
             </label>

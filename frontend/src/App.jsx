@@ -1,4 +1,3 @@
-import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Result from "./pages/Result";
@@ -11,7 +10,7 @@ const App = () => {
   return (
     <>
       <div className="bg-gray-100 min-h-screen">
-        <Toaster position="bottom-right" reverseOrder={true} />
+        <Toaster position="top-center" reverseOrder={true} />
         <header>
           <Navbar />
         </header>

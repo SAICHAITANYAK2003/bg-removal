@@ -65,9 +65,10 @@ export const clerkWebHooks = async (request, response) => {
 
 export const userCredits = async (request, response) => {
   try {
-    const { clerkId } = request.clerkId;
+    const clerkId = request.clerkId;
 
     const userData = await userModel.findOne({ clerkId });
+    console.log(clerkId);
     if (!userData) {
       return response.json({ success: false, message: "User not found" });
     }
