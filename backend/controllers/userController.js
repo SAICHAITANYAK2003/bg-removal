@@ -7,6 +7,8 @@ import userModel from "../models/userModel.js";
 console.log("🧠 Using Model:", userModel.modelName);
 
 export const clerkWebHooks = async (request, response) => {
+  console.log("📩 Webhook received:", request.body);
+
   try {
     const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
 
@@ -27,7 +29,6 @@ export const clerkWebHooks = async (request, response) => {
           firstName: data.first_name,
           lastName: data.last_name,
         };
-        console.log("🧠 Using Model:", userModel.modelName);
 
         await userModel.create(userData);
         response.json({});
@@ -65,10 +66,11 @@ export const clerkWebHooks = async (request, response) => {
 
 export const userCredits = async (request, response) => {
   try {
+    console.log("request.clerkId:", request.clerkId);
     const clerkId = request.clerkId;
 
     const userData = await userModel.findOne({ clerkId });
-    console.log(clerkId);
+    console.log("📦 Fetched user:", userData);
     if (!userData) {
       return response.json({ success: false, message: "User not found" });
     }

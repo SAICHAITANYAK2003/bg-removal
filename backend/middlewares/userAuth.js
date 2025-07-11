@@ -7,12 +7,20 @@ export const userAuth = async (request, response, next) => {
     if (!token) {
       return response.json({
         success: false,
-        message: "Not Authorized Login Again",
+        message: "Not Authorized. Login again.",
       });
     }
 
-    const tokenDecode = jwt.decode(token);
-    request.clerkId = tokenDecode.clerkId;
+    const decoded = jwt.decode(token);
+
+    if (!decoded || !decoded.sub) {
+      return response.json({
+        success: false,
+        message: "Invalid token payload.",
+      });
+    }
+
+    request.clerkId = decoded.sub;
 
     next();
   } catch (error) {
