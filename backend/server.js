@@ -11,6 +11,7 @@ dotenv.config();
 const app = express();
 await mongooseDB();
  
+//If you want u can you the express.raw() or bodyParder.raw()
 
 app.use("/api/user/webhooks", bodyParser.raw({ type: "*/*" }));
 
