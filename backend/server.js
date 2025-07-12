@@ -10,9 +10,10 @@ dotenv.config();
 //Config
 const app = express();
 await mongooseDB();
-console.log("🌐 ENV DB URI:", process.env.MONGO_URI);
+ 
 
-app.use("/api/user/webhooks", bodyParser.raw({ type: "application/json" }));
+app.use("/api/user/webhooks", bodyParser.raw({ type: "*/*" }));
+
 
 //Middleware
 app.use(express.json());
