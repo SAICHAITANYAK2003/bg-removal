@@ -6,7 +6,7 @@ Welcome to the **BG Removal** project. This is a full-stack application that all
 
 ## 🚀 Live Demo
 
-🌐 **Frontend:** [https://bgremoval.webinfloo.com](https://bgremoval.webinfloo.com)
+🌐 **Project Link :** [https://bgremoval.webinfloo.com](https://bgremoval.webinfloo.com)
 
 ---
 
