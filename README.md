@@ -122,7 +122,7 @@ npm install
 #### Frontend
 
 ```bash
-cd ../frontend
+cd frontend
 npm install
 ```
 
@@ -199,16 +199,10 @@ Pull requests welcome! For major changes, please open an issue first.
 
 ---
 
-## 📜 License
-
-This project is for learning purposes only. Feel free to use and adapt.
-
----
-
 ## ✨ Author
 
 Developed by **Sai Chaitanya**.
-Powered by the NxtWave CCBP 4.0 program.
+ 
 
 ---
 
@@ -216,17 +210,6 @@ Powered by the NxtWave CCBP 4.0 program.
 
 * Frontend Live: [Vercel Link](https://bgremoval.webinfloo.com)
 * Backend Deployed: [Render Link](https://bg-removal-4w0d.onrender.com)
-
----
-
-## ✅ NxtWave Evaluation Checklist
-
-* ✅ Modular code structure
-* ✅ Core features implemented
-* ✅ Error handling with clear messages
-* ✅ Clerk Authentication and Webhooks
-* ✅ Payment Integration
-* ✅ Clean deployment
 
 ---
 
