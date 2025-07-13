@@ -215,7 +215,7 @@ Powered by the NxtWave CCBP 4.0 program.
 ## 🔗 Links
 
 * Frontend Live: [Vercel Link](https://bgremoval.webinfloo.com)
-* Backend Deployed: [Render Link](your-render-url)
+* Backend Deployed: [Render Link](https://bg-removal-4w0d.onrender.com)
 
 ---
 
