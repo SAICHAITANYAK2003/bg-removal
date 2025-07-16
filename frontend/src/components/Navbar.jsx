@@ -31,7 +31,7 @@ const Navbar = () => {
             >
               <img src={assets.credit_icon} alt="credit-icon" className="w-5" />
               <p className="ml-1.5 max-sm:text-[12px]">
-                Credits Left : {credits}
+               Credits Left : {credits}
               </p>
             </button>
 

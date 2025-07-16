@@ -29,6 +29,7 @@ export const removeBgImage = async (request, response) => {
       });
     }
 
+    //ClipDrop process
     const formData = new FormData();
     formData.append("image_file", imageFile, {
       filename: request.file.originalname,
@@ -42,6 +43,8 @@ export const removeBgImage = async (request, response) => {
       },
       responseType: "arraybuffer",
     });
+
+    //Cloudinary Process
 
     const dataUri = `data:${request.file.mimetype};base64,${Buffer.from(
       data
