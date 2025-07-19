@@ -9,11 +9,11 @@ import { Toaster } from "react-hot-toast";
 const App = () => {
   return (
     <>
-      <div className="bg-gray-100 min-h-screen">
+      <main className="bg-gray-100 min-h-screen">
         <Toaster position="top-center" reverseOrder={true} />
-        <header>
+        <nav>
           <Navbar />
-        </header>
+        </nav>
 
         <Routes>
           <Route path="/" element={<Home />} />
@@ -23,7 +23,7 @@ const App = () => {
         <footer>
           <Footer />
         </footer>
-      </div>
+      </main>
     </>
   );
 };
