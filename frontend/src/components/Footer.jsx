@@ -5,12 +5,12 @@ import { HiLink } from "react-icons/hi";
 const Footer = () => {
   return (
     <>
-      <footer className="flex flex-col  items-center justify-around w-full py-16 text-sm  mt-15   ">
+      <footer className="flex flex-col  items-center justify-around w-full py-16 text-sm  mt-15">
         <h1 className="text-4xl max-sm:ml-3 md:text-6xl footer-font font-extrabold">
           <span className="text-6xl footer-font  font-extrabold text-violet-600 ">
             Developed
           </span>{" "}
-          by Developer of WebInFloo ...
+          by Founder of WebInFloo ...
         </h1>
 
         <div className="flex items-center gap-4 mt-10">
