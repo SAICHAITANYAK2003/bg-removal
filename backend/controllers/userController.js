@@ -1,4 +1,5 @@
 import { Webhook } from "svix";
+import crypto from "crypto";
 import userModel from "../models/userModel.js";
 import razorpay from "razorpay";
 import transactionModel from "../models/transactionModel.js";
@@ -161,37 +162,55 @@ export const paymentRazorpay = async (request, response) => {
 //To verify RazorPay
 export const verifyRazorpay = async (request, response) => {
   try {
-    const { razorpay_order_id } = request.body;
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
+      request.body;
 
+    // Verify payment signature
+    const generatedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+      .digest("hex");
+
+    if (generatedSignature !== razorpay_signature) {
+      return response.json({
+        success: false,
+        message: "Payment verification failed (Invalid Signature)",
+      });
+    }
+
+    // Fetch order details
     const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id);
 
-    if (orderInfo.status === "paid") {
-      const transactionData = await transactionModel.findById(
-        orderInfo.receipt
-      );
-
-      if (transactionData.payment) {
-        return response.json({
-          success: false,
-          message: "Payment already processed",
-        });
-      }
-
-      //Adding Credits to user data:
-      const userData = await userModel.findOne({
-        clerkId: transactionData.clerkId,
+    const transactionData = await transactionModel.findById(orderInfo.receipt);
+    if (!transactionData) {
+      return response.json({
+        success: false,
+        message: "Transaction not found",
       });
-      const creditBalance = userData.creditBalance + transactionData.credits;
-
-      await userModel.findByIdAndUpdate(userData._id, { creditBalance });
-
-      //making payment true
-      await transactionModel.findByIdAndUpdate(transactionData._id, {
-        payment: true,
-      });
-
-      response.json({ success: true, message: "Credits Added" });
     }
+
+    if (transactionData.payment) {
+      return response.json({
+        success: false,
+        message: "Payment already processed",
+      });
+    }
+
+    // Add credits
+    const userData = await userModel.findOne({
+      clerkId: transactionData.clerkId,
+    });
+
+    const creditBalance = userData.creditBalance + transactionData.credits;
+
+    await userModel.findByIdAndUpdate(userData._id, { creditBalance });
+
+    // Mark transaction as paid
+    await transactionModel.findByIdAndUpdate(transactionData._id, {
+      payment: true,
+    });
+
+    return response.json({ success: true, message: "Credits Added" });
   } catch (error) {
     console.log(error.message);
     return response.json({ success: false, message: error.message });

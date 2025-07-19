@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 
 const BuyCredit = () => {
-  const { backendUrl, loadCredits } = useContext(AppContext);
+  const { backendUrl, fetchCredits } = useContext(AppContext);
   const navigate = useNavigate();
 
   const { getToken } = useAuth();
@@ -20,7 +20,7 @@ const BuyCredit = () => {
       name: "Credits Payment",
       description: "Credits Payment",
       order_id: order.id,
-       
+      //Razorpay accepts the default function
       handler: function (response) {
         getToken().then((token) => {
           axios
@@ -29,7 +29,7 @@ const BuyCredit = () => {
             })
             .then(({ data }) => {
               if (data.success) {
-                loadCredits();
+                fetchCredits();
                 navigate("/");
                 toast.success("Credits Added");
               } else {

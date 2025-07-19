@@ -37,7 +37,7 @@ const Navbar = () => {
               <p className="ml-1.5 max-sm:text-[12px] flex items-center gap-x-1.5">
                 Credits Left :
                 {loadingCredits ? (
-                  <div className="w-5 h-5 border-4 border-dashed rounded-full animate-spin border-violet-500 mx-auto"></div>
+                  <span className="w-5 h-5 border-4 border-dashed rounded-full animate-spin border-violet-500 mx-auto"></span>
                 ) : (
                   <span>{credits}</span>
                 )}
