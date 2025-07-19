@@ -21,7 +21,11 @@ const Navbar = () => {
     <>
       <div className="flex items-center justify-between px-2 py-4 md:py-0 md:px-20 md:pt-4 w-full">
         <Link to="/">
-          <img src={assets.logo_no_bg} alt="logo" className="w-40 h-25" />
+          <img
+            src={assets.logo_no_bg}
+            alt="logo"
+            className="w-30 h-5` md:w-40 md:h-25"
+          />
         </Link>
         {isSignedIn ? (
           <div className="flex items-center gap-2 md:gap-3">
