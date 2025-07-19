@@ -8,13 +8,13 @@ import { AppContext } from "../context/AppContext";
 const Navbar = () => {
   const { openSignIn } = useClerk();
   const { isSignedIn, user } = useUser();
-  const { credits, loadCredits } = useContext(AppContext);
+  const { credits, fetchCredits, loadingCredits } = useContext(AppContext);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     if (isSignedIn) {
-      loadCredits();
+      fetchCredits();
     }
   }, [isSignedIn]);
   return (
@@ -27,11 +27,16 @@ const Navbar = () => {
           <div className="flex items-center gap-2 md:gap-3">
             <button
               onClick={() => navigate("/buy")}
-              className="flex items-center border-2 bg-violet-100 border-violet-700  px-2 py-1.5 sm:py-2 rounded-full cursor-pointer "
+              className="flex items-center border-[0.5px] bg-violet-100 border-violet-700  px-2 py-1.5 sm:py-2 rounded-full cursor-pointer "
             >
               <img src={assets.credit_icon} alt="credit-icon" className="w-5" />
-              <p className="ml-1.5 max-sm:text-[12px]">
-               Credits Left : {credits}
+              <p className="ml-1.5 max-sm:text-[12px] flex items-center gap-x-1.5">
+                Credits Left :
+                {loadingCredits ? (
+                  <div className="w-5 h-5 border-4 border-dashed rounded-full animate-spin border-violet-500 mx-auto"></div>
+                ) : (
+                  <span>{credits}</span>
+                )}
               </p>
             </button>
 

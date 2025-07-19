@@ -9,6 +9,7 @@ export const AppContextProvider = ({ children }) => {
   const [credits, setCredits] = useState(0);
   const [image, setImage] = useState("");
   const [resultImage, setResultImage] = useState(false);
+  const [loadingCredits, setLoadingCredits] = useState(false);
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
@@ -17,8 +18,9 @@ export const AppContextProvider = ({ children }) => {
   const { isSignedIn } = useUser();
   const { openSignIn } = useClerk();
 
-  const loadCredits = async () => {
+  const fetchCredits = async () => {
     try {
+      setLoadingCredits(true);
       const token = await getToken();
 
       const { data } = await axios.get(backendUrl + "/api/user/credits", {
@@ -31,6 +33,8 @@ export const AppContextProvider = ({ children }) => {
     } catch (error) {
       console.log("📢 API error:", error);
       toast.error(error.message);
+    } finally {
+      setLoadingCredits(false);
     }
   };
 
@@ -81,13 +85,15 @@ export const AppContextProvider = ({ children }) => {
   const value = {
     credits,
     setCredits,
-    loadCredits,
+    fetchCredits,
     backendUrl,
     image,
     setImage,
     removeBg,
     resultImage,
     setResultImage,
+    loadingCredits,
+    setLoadingCredits,
   };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
