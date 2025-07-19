@@ -9,21 +9,28 @@ import { Toaster } from "react-hot-toast";
 const App = () => {
   return (
     <>
-      <main className="bg-gray-100 min-h-screen">
-        <Toaster position="top-center" reverseOrder={true} />
-        <nav>
-          <Navbar />
-        </nav>
+      <Toaster position="top-center" reverseOrder={true} />
 
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/result" element={<Result />} />
-          <Route path="/buy" element={<BuyCredit />} />
-        </Routes>
+      <div className="bg-gray-100 min-h-screen flex flex-col">
+        {/* Header */}
+        <header>
+          <Navbar />
+        </header>
+
+        {/* Main content */}
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/result" element={<Result />} />
+            <Route path="/buy" element={<BuyCredit />} />
+          </Routes>
+        </main>
+
+        {/* Footer */}
         <footer>
           <Footer />
         </footer>
-      </main>
+      </div>
     </>
   );
 };
