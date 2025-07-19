@@ -20,29 +20,27 @@ const BuyCredit = () => {
       name: "Credits Payment",
       description: "Credits Payment",
       order_id: order.id,
-      receipt: order.receipt,
-      handler: async (response) => {
-        console.log(response);
-
-        const token = getToken();
-
-        try {
-          const { data } =await axios.post(
-            backendUrl + "/api/user/verify-payment",
-            response,
-            { headers: { token } }
-          );
-
-          if (data.success) {
-            loadCredits();
-            navigate("/");
-            toast.success("Credits Added");
-          }
-        } catch (error) {
-          console.log(error.message);
-
-          toast.error(error.message);
-        }
+       
+      handler: function (response) {
+        getToken().then((token) => {
+          axios
+            .post(backendUrl + "/api/user/verify-payment", response, {
+              headers: { token },
+            })
+            .then(({ data }) => {
+              if (data.success) {
+                loadCredits();
+                navigate("/");
+                toast.success("Credits Added");
+              } else {
+                toast.error(data.message);
+              }
+            })
+            .catch((error) => {
+              console.error(error.message);
+              toast.error("Payment verification failed");
+            });
+        });
       },
     };
 
